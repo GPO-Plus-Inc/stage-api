@@ -19,7 +19,7 @@ const jobRoutes = require("./routes/jobRoutes");
 
 var app = express();
 const corsOptions = {
-  origin: ['http://localhost:3000'], // Explicitly allowed origins
+  origin: ['http://localhost:3000',"https://stage.prismplus.ai","https://prismplus.ai"], // Explicitly allowed origins
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true, // If you use cookies or authorization headers
 };
@@ -47,9 +47,21 @@ app.use("/v1",serviceLocationRoutes);
 app.use("/v1",jobRoutes);
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice').then(()=>{
-  console.log("Database connected !!")
+// mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice').then(()=>{
+//   console.log("Database connected !!")
+// });
+
+
+mongoose.connect(
+  "mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice"
+)
+.then(() => {
+  console.log("Database connected !!");
+})
+.catch((err) => {
+  console.error("MongoDB Error:", err);
 });
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
