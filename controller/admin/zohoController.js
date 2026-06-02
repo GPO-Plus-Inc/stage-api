@@ -1,6 +1,6 @@
 const axios = require("axios");
 const ZohoConnection = require("../../modal/admin/zohoCrmModal");
-const ZohoMapping = require("../../modal/admin/ZohoMappingModal");
+const ZohoMapping = require("../../modal/admin/zohoMappingModal");
 const ServiceLocation = require("../../modal/admin/serviceLocationModal");
 const { getAccessToken } = require("../../utils/zohoToken");
 const { encrypt } = require("../../utils/crypto");
