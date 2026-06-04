@@ -34,22 +34,13 @@ exports.login = async (req, res) => {
       user_id: user._id
     });
 
-    // // cookie set for localhost
-    // res.cookie("auth_token", token, {
-    //   httpOnly: true,
-    //   secure: false,   // production me true
-    //   sameSite: "lax",
-    //   maxAge: 24 * 60 * 60 * 1000 // 1 day
-    // });
-
-
-  res.cookie("auth_token", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  // domain: ".prismplus.ai",
-  maxAge: 24 * 60 * 60 * 1000,
-});
+    // cookie set
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: false,   // production me true
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
 
     res.json({
       message: "Login successful"
