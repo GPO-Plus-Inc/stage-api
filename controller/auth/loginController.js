@@ -42,11 +42,22 @@ exports.login = async (req, res) => {
     //   maxAge: 24 * 60 * 60 * 1000 // 1 day
     // });
 
-  res.cookie("auth_token", token, {
+
+//   res.cookie("auth_token", token, {
+//   httpOnly: true,
+//   secure: true,
+//   sameSite: "lax",
+//   domain: ".prismplus.ai",
+//   maxAge: 24 * 60 * 60 * 1000,
+// });
+
+const isProduction = process.env.NODE_ENV === "production";
+
+res.cookie("auth_token", token, {
   httpOnly: true,
-  secure: true,
-  sameSite: "lax",
-  domain: ".prismplus.ai",
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+  domain: isProduction ? ".prismplus.ai" : undefined,
   maxAge: 24 * 60 * 60 * 1000,
 });
 
