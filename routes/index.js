@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {createUser,getUsers} = require("../controller/admin/userController");
+const {createUser,getUsers,getUsersByRole,getOrg} = require("../controller/admin/userController");
 const auth = require("../middleware/authMiddleware");
 const permission = require("../middleware/checkPermission");
 
@@ -17,6 +17,22 @@ router.get(
   auth,
   permission("user.view"),
   getUsers
+);
+
+
+router.post(
+  "/getUsersByRole",
+  auth,
+  permission("role.view"),
+  getUsersByRole
+);
+
+
+router.get(
+  "/getOrg",
+  auth,
+  permission("org.view"),
+  getOrg
 );
 
 // router.put(

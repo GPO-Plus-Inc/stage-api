@@ -1,4 +1,6 @@
 const User = require("../../modal/admin/userModal");
+const Role = require("../../modal/admin/roleModal");
+const Org = require("../../modal/admin/organizationModal");
 const bcrypt = require("bcryptjs");
 
 
@@ -59,6 +61,61 @@ exports.getUsers = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: error.message
+    });
+  }
+};
+
+
+
+// Get Org
+exports.getOrg = async (req, res) => {
+
+  try {
+
+    const orgData = await Org.find({})
+    res.json({
+      success: true,
+      data: orgData
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+
+exports.getUsersByRole = async (req, res) => {
+  try {
+    const { role } = req.body; // Technician
+
+    const roleData = await Role.findOne({
+      name: role,
+      organization_id: req.user.organization_id,
+    });
+
+    if (!roleData) {
+      return res.status(404).json({
+        success: false,
+        message: "Role not found",
+      });
+    }
+
+    const users = await User.find({
+      organization_id: req.user.organization_id,
+      role_id: roleData._id,
+    }).select("_id name email");;
+
+
+    res.json({
+      success: true,
+      data: users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
