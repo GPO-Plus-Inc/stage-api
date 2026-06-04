@@ -54,7 +54,7 @@ app.use("/v1",jobRoutes);
 
 
 mongoose.connect(
-  "mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@107.23.174.84:27017/prismplusservice?authSource=prismplusservice"
+  "mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice"
 )
 .then(() => {
   console.log("Database connected !!");
