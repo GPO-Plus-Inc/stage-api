@@ -47,21 +47,21 @@ app.use("/v1",serviceLocationRoutes);
 app.use("/v1",jobRoutes);
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice').then(()=>{
-  console.log("Database connected !!")
-});
-
-
-
-// mongoose.connect(
-//   "mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@107.23.174.84:27017/prismplusservice?authSource=prismplusservice"
-// )
-// .then(() => {
-//   console.log("Database connected !!");
-// })
-// .catch((err) => {
-//   console.error("MongoDB Error:", err);
+// mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice').then(()=>{
+//   console.log("Database connected !!")
 // });
+
+
+
+mongoose.connect(
+  "mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@107.23.174.84:27017/prismplusservice?authSource=prismplusservice"
+)
+.then(() => {
+  console.log("Database connected !!");
+})
+.catch((err) => {
+  console.error("MongoDB Error:", err);
+});
 
 
 // catch 404 and forward to error handler
