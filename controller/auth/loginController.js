@@ -37,8 +37,9 @@ exports.login = async (req, res) => {
     // cookie set
     res.cookie("auth_token", token, {
       httpOnly: true,
-      secure: false,   // production me true
+      secure: true,   // production me true
       sameSite: "lax",
+      domain:".prismplus.ai"
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
