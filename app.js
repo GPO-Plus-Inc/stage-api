@@ -16,11 +16,20 @@ const qboRoutes = require("./routes/qboRoutes");
 const accountRoutes = require("./routes/accountRoutes");
 const serviceLocationRoutes = require("./routes/serviceLocationRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const recurringJobRoutes = require("./routes/recurringJobRoutes");
+const templateRoutes = require("./routes/templateRoutes");
+const jobTemplateRoutes = require("./routes/jobTemplateRoutes");
+const inventoryRoutes = require("./routes/inventoryRoutes");
+const planogramRoutes = require("./routes/planogramRoutes");
+const equipmentRoutes = require("./routes/equipmentRoutes");
+const assetRoutes = require("./routes/assetRoutes");
+const serviceRoutes = require("./routes/serviceRoutes");
+const inventoryLocationRoutes = require("./routes/inventoryLocationRoutes");
 
 var app = express();
 const corsOptions = {
   origin: ['http://localhost:3000',"https://stage.prismplus.ai","https://prismplus.ai"], // Explicitly allowed origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
   credentials: true, // If you use cookies or authorization headers
 };
 
@@ -45,6 +54,15 @@ app.use("/v1",qboRoutes);
 app.use("/v1",accountRoutes);
 app.use("/v1",serviceLocationRoutes);
 app.use("/v1",jobRoutes);
+app.use("/v1",recurringJobRoutes);
+app.use("/v1",templateRoutes);
+app.use("/v1",jobTemplateRoutes);
+app.use("/v1",inventoryRoutes);
+app.use("/v1",planogramRoutes);
+app.use("/v1",equipmentRoutes);
+app.use("/v1",assetRoutes);
+app.use("/v1",serviceRoutes);
+app.use("/v1",inventoryLocationRoutes);
 
 
 // mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice').then(()=>{
@@ -53,9 +71,8 @@ app.use("/v1",jobRoutes);
 
 
 
-mongoose.connect(
-  "mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice"
-)
+mongoose.connect("mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice")
+// mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice')
 .then(() => {
   console.log("Database connected !!");
 })
