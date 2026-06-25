@@ -73,8 +73,8 @@ app.use("/v1",dashboardRoutes);
 
 
 
-// mongoose.connect("mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice")
-mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice')
+// mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice')
+mongoose.connect("mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice")
 .then(() => {
   console.log("Database connected !!");
 })
