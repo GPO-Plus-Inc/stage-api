@@ -18,8 +18,13 @@ exports.createJob = async (req, res) => {
       address,
       city,
       state,
+      estimatedDuration,
+      estimatedAmount,
+      actualAmount,
+      notes,
     } = req.body;
 
+    // Validation
     if (!title) {
       return res.status(400).json({
         success: false,
@@ -27,29 +32,57 @@ exports.createJob = async (req, res) => {
       });
     }
 
+    if (!client) {
+      return res.status(400).json({
+        success: false,
+        message: "Client is required",
+      });
+    }
+
+    if (!scheduleStart) {
+      return res.status(400).json({
+        success: false,
+        message: "Schedule start date is required",
+      });
+    }
+
     const job = await Job.create({
       jobTemplate,
       title,
       client,
-      assignedTechnician,
-      priority,
+      assignedTechnician: assignedTechnician || null,
+      priority: priority || "Medium",
+
       scheduleStart,
-      scheduleEnd,
+      scheduleEnd: scheduleEnd || null,
+
       description,
-      checklist,
+      checklist: checklist || [],
+
       address,
       city,
       state,
+
+      estimatedDuration: estimatedDuration || 0,
+      estimatedAmount: estimatedAmount || 0,
+      actualAmount: actualAmount || 0,
+
+      notes: notes || "",
+
+      status: "Pending",
+
       createdBy: req.user._id,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Job created successfully",
       data: job,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -67,28 +100,70 @@ exports.getJobs = async (req, res) => {
       priority,
       technician,
       client,
+      date,
       page = 1,
       limit = 10,
     } = req.query;
 
     let filter = {};
 
+    // Today's Date
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    // Status Filter
     if (status) {
-      filter.status = status;
+      if (status === "scheduled") {
+        filter.status = {
+          $in: ["Pending", "Assigned", "In Progress"],
+        };
+      } else {
+        filter.status = status;
+      }
     }
 
+    // Date Filter
+    if (date === "today") {
+      filter.$and = [
+        {
+          scheduleStart: {
+            $lte: todayEnd,
+          },
+        },
+        {
+          $or: [
+            {
+              scheduleEnd: {
+                $gte: todayStart,
+              },
+            },
+            {
+              scheduleEnd: null,
+            },
+          ],
+        },
+      ];
+    }
+
+    // Priority
     if (priority) {
       filter.priority = priority;
     }
 
+    // Technician
     if (technician) {
       filter.assignedTechnician = technician;
     }
 
+    // Client
     if (client) {
       filter.client = client;
     }
 
+    // Search
     if (search) {
       filter.$or = [
         {
@@ -107,31 +182,32 @@ exports.getJobs = async (req, res) => {
     }
 
     const jobs = await Job.find(filter)
-      .populate("client")
-      .populate("assignedTechnician")
+      .populate("client", "location_name company city")
+      .populate("assignedTechnician", "name email")
       .populate("createdBy", "name email")
       .populate("updatedBy", "name email")
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
+      .sort({ scheduleStart: 1 })
+      .skip((Number(page) - 1) * Number(limit))
       .limit(Number(limit));
 
     const total = await Job.countDocuments(filter);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       total,
       page: Number(page),
-      pages: Math.ceil(total / limit),
+      pages: Math.ceil(total / Number(limit)),
       data: jobs,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
-
 // ===============================
 // Get Single Job
 // ===============================
@@ -223,12 +299,21 @@ exports.updateJobStatus = async (req, res) => {
       });
     }
 
+    const updateData = {
+      status,
+      updatedBy: req.user._id,
+    };
+
+    // Set completedAt only when job is completed
+    if (status === "Completed") {
+      updateData.completedAt = new Date();
+    } else {
+      updateData.completedAt = null;
+    }
+
     const job = await Job.findByIdAndUpdate(
       req.params.id,
-      {
-        status,
-        updatedBy: req.user._id,
-      },
+      updateData,
       {
         new: true,
       }
@@ -253,7 +338,6 @@ exports.updateJobStatus = async (req, res) => {
     });
   }
 };
-
 // ===============================
 // Delete Job
 // ===============================
@@ -281,3 +365,4 @@ exports.deleteJob = async (req, res) => {
     });
   }
 };
+

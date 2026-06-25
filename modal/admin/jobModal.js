@@ -1,18 +1,26 @@
 const mongoose = require("mongoose");
 
-const checklistSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ["section", "item"],
-    required: true,
-  },
+const checklistSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      enum: ["section", "item"],
+      required: true,
+    },
 
-  title: {
-    type: String,
-    required: true,
-    trim: true,
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    isCompleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-});
+  { _id: false }
+);
 
 const jobSchema = new mongoose.Schema(
   {
@@ -30,11 +38,14 @@ const jobSchema = new mongoose.Schema(
     client: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "serviceLocation",
+      required: true,
     },
 
+    // Technician
     assignedTechnician: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "role",
+      ref: "user",
+      default: null,
     },
 
     priority: {
@@ -43,19 +54,57 @@ const jobSchema = new mongoose.Schema(
       default: "Medium",
     },
 
-    scheduleStart: Date,
+    scheduleStart: {
+      type: Date,
+      required: true,
+    },
 
-    scheduleEnd: Date,
+    scheduleEnd: {
+      type: Date,
+      default: null,
+    },
 
-    description: String,
+    completedAt: {
+      type: Date,
+      default: null,
+    },
+
+    description: {
+      type: String,
+      trim: true,
+    },
 
     checklist: [checklistSchema],
 
-    address: String,
+    address: {
+      type: String,
+      trim: true,
+    },
 
-    city: String,
+    city: {
+      type: String,
+      trim: true,
+    },
 
-    state: String,
+    state: {
+      type: String,
+      trim: true,
+    },
+
+    estimatedDuration: {
+      type: Number,
+      default: 0,
+    },
+
+    estimatedAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    actualAmount: {
+      type: Number,
+      default: 0,
+    },
 
     status: {
       type: String,
@@ -69,6 +118,11 @@ const jobSchema = new mongoose.Schema(
       default: "Pending",
     },
 
+    notes: {
+      type: String,
+      default: "",
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
@@ -78,6 +132,7 @@ const jobSchema = new mongoose.Schema(
     updatedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
+      default: null,
     },
   },
   {

@@ -25,6 +25,7 @@ const equipmentRoutes = require("./routes/equipmentRoutes");
 const assetRoutes = require("./routes/assetRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
 const inventoryLocationRoutes = require("./routes/inventoryLocationRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 var app = express();
 const corsOptions = {
@@ -63,6 +64,7 @@ app.use("/v1",equipmentRoutes);
 app.use("/v1",assetRoutes);
 app.use("/v1",serviceRoutes);
 app.use("/v1",inventoryLocationRoutes);
+app.use("/v1",dashboardRoutes);
 
 
 // mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice').then(()=>{
@@ -71,8 +73,8 @@ app.use("/v1",inventoryLocationRoutes);
 
 
 
-mongoose.connect("mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice")
-// mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice')
+// mongoose.connect("mongodb://appuser:Falcon-Matrix-Comet-73%21Nova-Titan-Vortex-48@127.0.0.1:27017/prismplusservice?authSource=prismplusservice")
+mongoose.connect('mongodb://127.0.0.1:27017/prismplusservice')
 .then(() => {
   console.log("Database connected !!");
 })
